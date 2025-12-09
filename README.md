@@ -2,7 +2,7 @@
 
 ## 📋 Información
 
-- **Estudiante:** Nixon Hernan Alejo Baracaldo
+- **Aprendiz:** Nixon Hernan Alejo Baracaldo
 - **Ficha:** 3228973A
 - **Dominio Asignado:** LogiCarga
 - **Instructor:** Erick Granados

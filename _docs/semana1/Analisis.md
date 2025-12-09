@@ -1,82 +1,142 @@
 # Análisis Orientado a Objetos - LogiCarga
 
 ## 1. Identificación del Dominio
+
 **Nombre del negocio:** LogiCarga  
 **Tipo:** Empresa de transporte de carga terrestre (logística)  
-**Descripción:** LogiCarga presta servicios de transporte de carga nacional, maneja carga general y refrigerada, posee flota de camiones y bodega temporal. Realiza aproximadamente 200 envíos mensuales.
+**Descripción:**  
+LogiCarga presta servicios de transporte de carga nacional, maneja carga general y refrigerada, posee flota de camiones y bodega temporal. Realiza aproximadamente 200 envíos mensuales y mantiene relación directa con clientes empresariales.
+
+El sistema busca modelar los procesos principales: gestión de envíos, clientes, vehículos y operaciones de pago y notificación.
+
+---
 
 ## 2. Objetos Identificados
 
-### Objeto Principal: CargoShipment
+### 🟩 Objeto Principal: CargoShipment
+
 **¿Qué es?:** Representa un envío de carga con origen, destino, peso y características de transporte.
-**Atributos identificados:**
-- shipmentCode: String - identificador único del envío
-- origin: String - ciudad de origen
-- destination: String - ciudad destino
-- weightKg: double - peso de la carga en kilogramos
-- distanceKm: int - distancia estimada en kilómetros
-- refrigerated: boolean - indica si requiere refrigeración
-- delivered: boolean - estado de entrega
 
-**Métodos identificados:**
-- printInfo(): void - imprime la información completa del envío
-- calculateEstimatedCost(): double - calcula el costo estimado basado en peso y distancia
-- getShipmentCode(): String - obtiene el código del envío (getter)
-- setDelivered(boolean): void - marca el envío como entregado (setter)
-- changeDestination(String): void - permite reprogramar destino
+**Atributos:**
+- `shipmentCode`: String — identificador único del envío
+- `origin`: String — ciudad de origen
+- `destination`: String — ciudad destino
+- `weightKg`: double — peso de la carga en kilogramos
+- `distanceKm`: int — distancia estimada en kilómetros
+- `refrigerated`: boolean — indica si requiere refrigeración
+- `delivered`: boolean — estado de entrega
 
-### Objeto Secundario: Cliente
-**¿Qué es?:** Representa la persona o empresa que contrata el servicio.
-**Atributos identificados:**
-- clientId: String - identificador del cliente
-- name: String - nombre o razón social
-- nitOrId: String - identificación fiscal
-- phone: String - contacto telefónico
-- address: String - dirección
+**Métodos:**
+- `printInfo()`: void — imprime la información completa del envío
+- `calculateEstimatedCost()`: double — calcula el costo estimado del envío
+- `getShipmentCode()`: String — obtiene el código del envío
+- `setDelivered(boolean)`: void — marca el envío como entregado
+- `changeDestination(String)`: void — permite reprogramar el destino
+- `getSummary()`: String — devuelve un resumen breve del envío
 
-**Métodos identificados:**
-- showInfo(): void - muestra datos del cliente
-- makePayment(double, String): boolean - simula un pago y retorna si fue exitoso
-- contact(String): String - envía un mensaje de notificación y retorna confirmación
+---
 
-## 3. Relación entre Objetos
-**Tipo de relación:** Asociación (Cliente ↔ CargoShipment)  
-**Descripción:** Un Cliente puede crear o solicitar uno o varios CargoShipments. El envío registra información necesaria para facturación y seguimiento del cliente; por tanto, el cliente y los envíos están conceptualmente asociados.
+### 🟨 Objeto Secundario: Cliente
 
-## 4. Justificación del Diseño
-**¿Por qué elegí estos objetos?** Porque representan las entidades centrales de la operación: quien solicita el servicio (Cliente) y el servicio en sí (CargoShipment).  
-**¿Por qué estos atributos son importantes?** Permiten identificar, facturar, calcular costo y gestionar logística (peso, distancia, refrigeración).  
-**¿Por qué estos métodos son necesarios?** Para observar/gestionar estado (printInfo, setDelivered), operar sobre datos (changeDestination) y calcular valores de negocio (calculateEstimatedCost).
+**¿Qué es?:** Representa al cliente que contrata el servicio de envío.
 
-## 5. Comparación: POO vs Programación Estructurada
-**Sin POO (Estructurado):** Se manejarían variables sueltas para cada envío (codigo1, origen1, destino1, peso1...) y funciones separadas. Esto complica la gestión cuando hay muchos envíos.  
-**Con POO:** Se crea la clase `CargoShipment`, cada envío es un objeto con datos y métodos. Se facilita escalabilidad, mantenimiento y legibilidad.
+**Atributos:**
+- `clientId`: String — código único del cliente
+- `name`: String — nombre de la empresa cliente
+- `nit`: String — número de identificación tributaria
+- `phone`: String — número de contacto
+- `address`: String — dirección física
 
-**Ventajas específicas en mi dominio:**
-1. Modelado realista de la operación logística.
-2. Facilita extensión (p. ej. agregar métodos de rastreo, historial).
-3. Mejora la reutilización y pruebas unitarias.
+**Métodos:**
+- `showInfo()`: void — muestra la información del cliente
+- `makePayment(double, String)`: boolean — simula el pago del envío
+- `contact(String)`: void — envía un mensaje al cliente
 
-## 6. Diagrama de clases (texto simple)
-CargoShipment 1..* <----> 0..1 Cliente
+---
 
-CargoShipment:
-- shipmentCode: String
-- origin: String
-- destination: String
-- weightKg: double
-- distanceKm: int
-- refrigerated: boolean
-+ printInfo()
-+ calculateEstimatedCost()
-+ getShipmentCode()
-+ setDelivered()
+### 🟦 Objeto Complementario: Vehiculo
 
-Cliente:
-- clientId: String
-- name: String
-- nitOrId: String
-- phone: String
-+ showInfo()
-+ makePayment()
-+ contact()
+**¿Qué es?:** Representa un camión o vehículo de transporte asignado a un envío.
+
+**Atributos:**
+- `plate`: String — placa del vehículo
+- `model`: String — modelo del vehículo
+- `capacityKg`: double — capacidad máxima de carga
+- `available`: boolean — estado de disponibilidad
+
+**Métodos:**
+- `assignToShipment(CargoShipment)`: void — asigna el vehículo a un envío
+- `toggleAvailability()`: void — cambia el estado de disponibilidad
+- `getInfo()`: String — devuelve la información del vehículo
+
+---
+
+### 🟧 Objeto de Gestión: LogiCarga
+
+**¿Qué es?:** Clase que gestiona todos los envíos realizados por la empresa.
+
+**Atributos:**
+- `nombre`: String — nombre de la empresa
+- `envios`: ArrayList<Envio> — lista de envíos registrados
+
+**Métodos:**
+- `agregarEnvio(Envio)`: void — agrega un nuevo envío
+- `mostrarEnvios()`: void — imprime todos los envíos registrados
+
+---
+
+### 🟨 Objeto de Apoyo: Envio
+
+**¿Qué es?:** Representa un envío simplificado para pruebas o gestión interna.
+
+**Atributos:**
+- `destino`: String — ciudad destino
+- `peso`: double — peso de la carga
+
+**Métodos:**
+- `obtenerResumen()`: String — devuelve un resumen del envío
+
+---
+
+### 🟦 Clase de Control: Main
+
+**¿Qué es?:** Punto de entrada del sistema, encargado de demostrar la interacción entre los objetos.
+
+**Responsabilidades:**
+- Crear clientes y envíos
+- Mostrar información y cálculos
+- Ejecutar operaciones sobre envíos (entrega, cambio de destino)
+- Simular pagos y notificaciones
+- Integrar todas las clases en una demostración funcional
+
+---
+
+## 3. Relaciones entre Clases
+
+- `Cliente` realiza pagos y recibe notificaciones sobre un `CargoShipment`.
+- `CargoShipment` puede ser gestionado por `LogiCarga` y asignado a un `Vehiculo`.
+- `Vehiculo` puede estar disponible o no para ser asignado a un `CargoShipment`.
+- `LogiCarga` actúa como contenedor y gestor de múltiples envíos (`Envio`).
+- `Main` coordina la ejecución y demuestra la interacción entre todas las clases.
+
+---
+
+## 4. Justificación Orientada a Objetos
+
+El diseño propuesto sigue los principios de la programación orientada a objetos:
+
+- **Encapsulamiento:** cada clase maneja sus propios datos y comportamientos.
+- **Modularidad:** las clases están separadas por responsabilidad (envíos, clientes, vehículos).
+- **Reusabilidad:** los métodos permiten reutilizar lógica como impresión, cálculo de costos y contacto.
+- **Extensibilidad:** se pueden agregar nuevas clases como `Factura`, `Ruta`, o `Conductor` sin romper el diseño actual.
+
+---
+
+## 5. Estado Actual del Proyecto
+
+- Clases implementadas: `CargoShipment`, `Cliente`, `Vehiculo`, `LogiCarga`, `Envio`, `Main`
+- Proyecto funcional y ejecutable desde `Main.java`
+- Documentación técnica en progreso (`README.md`, `Analisis.md`)
+- Repositorio GitHub actualizado con código y análisis
+
+---
