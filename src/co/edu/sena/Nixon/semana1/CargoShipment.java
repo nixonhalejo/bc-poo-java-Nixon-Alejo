@@ -1,4 +1,5 @@
 package co.edu.sena.Nixon.semana1;
+
 // CargoShipment.java
 public class CargoShipment {
     // Atributos (mín. 5)
