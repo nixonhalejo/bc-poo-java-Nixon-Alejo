@@ -2,25 +2,32 @@ package co.edu.sena.Nixon.semana1;
 
 // CargoShipment.java
 public class CargoShipment {
-    // Atributos (mín. 5)
-    private String shipmentCode;    // String
-    private String origin;          // String
-    private String destination;     // String
-    private double weightKg;        // double
-    private int distanceKm;         // int
-    private boolean refrigerated;   // boolean
-    private boolean delivered;      // boolean (estado)
 
-    // Constructor que inicializa los atributos
+    // Atributos encapsulados
+    private String shipmentCode;
+    private String origin;
+    private String destination;
+    private double weightKg;
+    private int distanceKm;
+    private boolean refrigerated;
+    private boolean delivered;
+
+    // Constructor completo (usa setters con validación)
     public CargoShipment(String shipmentCode, String origin, String destination,
                          double weightKg, int distanceKm, boolean refrigerated) {
-        this.shipmentCode = shipmentCode;
-        this.origin = origin;
-        this.destination = destination;
-        this.weightKg = weightKg;
-        this.distanceKm = distanceKm;
-        this.refrigerated = refrigerated;
-        this.delivered = false; // por defecto al crear no está entregado
+
+        setShipmentCode(shipmentCode);
+        setOrigin(origin);
+        setDestination(destination);
+        setWeightKg(weightKg);
+        setDistanceKm(distanceKm);
+        setRefrigerated(refrigerated);
+        this.delivered = false; // estado inicial
+    }
+
+    // Constructor parcial (sobrecarga)
+    public CargoShipment(String shipmentCode, String origin, String destination) {
+        this(shipmentCode, origin, destination, 1.0, 1, false);
     }
 
     // Método void que imprime información
@@ -35,31 +42,81 @@ public class CargoShipment {
     }
 
     // Método que retorna un valor calculado: costo estimado
-    // Ejemplo simple: tarifa base + (peso * tarifaPorKg) + (distancia * tarifaPorKm)
     public double calculateEstimatedCost() {
-        double base = 50000; // tarifa base (ej. en COP)
-        double tarifaPorKg = 1200; // por kg
-        double tarifaPorKm = 150; // por km
+        double base = 50000;
+        double tarifaPorKg = 1200;
+        double tarifaPorKm = 150;
+
         double costo = base + (weightKg * tarifaPorKg) + (distanceKm * tarifaPorKm);
+
         if (refrigerated) {
-            costo *= 1.25; // recargo 25% si requiere refrigeración
+            costo *= 1.25; // recargo 25%
         }
         return costo;
     }
 
-    // Método getter (ejemplo)
+    // Getters
     public String getShipmentCode() {
         return shipmentCode;
     }
 
-    // Método setter (ejemplo: cambiar estado entregado)
+    public boolean isDelivered() {
+        return delivered;
+    }
+
+    // Setters con validación
+    public void setShipmentCode(String shipmentCode) {
+        if (shipmentCode != null && !shipmentCode.trim().isEmpty()) {
+            this.shipmentCode = shipmentCode;
+        } else {
+            throw new IllegalArgumentException("Código de envío inválido");
+        }
+    }
+
+    public void setOrigin(String origin) {
+        if (origin != null && !origin.trim().isEmpty()) {
+            this.origin = origin;
+        } else {
+            throw new IllegalArgumentException("Origen inválido");
+        }
+    }
+
+    public void setDestination(String destination) {
+        if (destination != null && !destination.trim().isEmpty()) {
+            this.destination = destination;
+        } else {
+            throw new IllegalArgumentException("Destino inválido");
+        }
+    }
+
+    public void setWeightKg(double weightKg) {
+        if (weightKg > 0) {
+            this.weightKg = weightKg;
+        } else {
+            throw new IllegalArgumentException("El peso debe ser mayor a cero");
+        }
+    }
+
+    public void setDistanceKm(int distanceKm) {
+        if (distanceKm > 0) {
+            this.distanceKm = distanceKm;
+        } else {
+            throw new IllegalArgumentException("La distancia debe ser mayor a cero");
+        }
+    }
+
+    public void setRefrigerated(boolean refrigerated) {
+        this.refrigerated = refrigerated;
+    }
+
+    // Método setter específico para cambiar estado
     public void setDelivered(boolean delivered) {
         this.delivered = delivered;
     }
 
-    // Método adicional: asignar nuevo destino (ej. para reprogramación)
+    // Método adicional: cambiar destino
     public void changeDestination(String newDestination) {
-        this.destination = newDestination;
+        setDestination(newDestination);
     }
 
     // Método adicional: obtener resumen corto
@@ -67,4 +124,3 @@ public class CargoShipment {
         return shipmentCode + ": " + origin + " -> " + destination + " | " + weightKg + "kg";
     }
 }
-
