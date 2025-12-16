@@ -4,75 +4,65 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("=== SISTEMA LOGICARGA ===\n");
+        System.out.println("=================================");
+        System.out.println(" SISTEMA LOGICARGA - DEMOSTRACIÓN ");
+        System.out.println("=================================\n");
 
-        // 1. Crear cliente (encapsulación + constructores)
-        Cliente cliente1 = new Cliente(
+        // Cliente
+        Cliente cliente = new Cliente(
                 "C001",
-                "Juan Pérez",
-                "123456789",
-                "3001234567",
-                "Calle 10 #20-30"
+                "Alimentos del Norte S.A.",
+                "900123456",
+                "3205558899",
+                "Calle 45 #12-30, Bogotá"
         );
 
-        cliente1.showInfo();
-        cliente1.makePayment(250000, "Tarjeta");
-        cliente1.contact("Su envío está en proceso");
+        cliente.showInfo();
+        System.out.println();
 
-        System.out.println("\n-----------------------------\n");
-
-        // 2. Crear vehículo
-        Vehiculo vehiculo1 = new Vehiculo(
-                "ABC123",
+        // Vehículo
+        Vehiculo vehiculo = new Vehiculo(
+                "ABC-123",
                 "Camión",
-                5000
+                1200
         );
 
-        System.out.println("Vehículo creado:");
-        System.out.println("Placa: " + vehiculo1.getPlaca());
-        System.out.println("Tipo: " + vehiculo1.getTipo());
-        System.out.println("Capacidad: " + vehiculo1.getCapacidadKg() + " kg");
+        System.out.println("Vehículo asignado: " + vehiculo.getPlaca());
+        System.out.println();
 
-        System.out.println("\n-----------------------------\n");
-
-        // 3. Crear envío asociado a vehículo
-        Envio envio1 = new Envio(
-                "E001",
-                1200,
-                "Medellín",
-                vehiculo1
-        );
-
-        System.out.println("Resumen del envío:");
-        System.out.println(envio1.obtenerResumen());
-        System.out.println("Costo del envío: $" + envio1.calcularCosto());
-
-        // Validar capacidad del vehículo
-        boolean capacidadOk = vehiculo1.validarCapacidad(envio1.getPeso());
-        System.out.println("¿Capacidad suficiente? " + (capacidadOk ? "Sí" : "No"));
-
-        System.out.println("\n-----------------------------\n");
-
-        // 4. Crear CargoShipment (caso más completo)
-        CargoShipment cargo1 = new CargoShipment(
-                "CS001",
+        // Polimorfismo: clase padre referencia subclases
+        CargoShipment envioEstandar = new StandardShipment(
+                "STD-001",
                 "Bogotá",
-                "Cali",
-                2000,
-                460,
-                true
+                "Medellín",
+                500,
+                420
         );
 
-        cargo1.printInfo();
-        System.out.println("Costo estimado: $" + cargo1.calculateEstimatedCost());
+        CargoShipment envioRefrigerado = new RefrigeratedShipment(
+                "REF-002",
+                "Cali",
+                "Barranquilla",
+                300,
+                900
+        );
 
-        // Cambiar estado y destino
-        cargo1.setDelivered(true);
-        cargo1.changeDestination("Palmira");
+        // Mostrar información de envíos
+        System.out.println("=== ENVÍO ESTÁNDAR ===");
+        envioEstandar.printInfo();
 
-        System.out.println("\nResumen actualizado:");
-        System.out.println(cargo1.getSummary());
+        System.out.println("\n=== ENVÍO REFRIGERADO ===");
+        envioRefrigerado.printInfo();
 
-        System.out.println("\n=== FIN DEL SISTEMA LOGICARGA ===");
+        // Simular pago
+        System.out.println("\n=== PROCESO DE PAGO ===");
+        cliente.makePayment(envioEstandar.calculateEstimatedCost(), "Transferencia");
+
+        // Cambio de estado
+        envioEstandar.setDelivered(true);
+        System.out.println("\nEstado actualizado del envío:");
+        envioEstandar.printInfo();
+
+        System.out.println("\n=== FIN DE LA DEMOSTRACIÓN ===");
     }
 }
